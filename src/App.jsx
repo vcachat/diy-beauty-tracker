@@ -74,16 +74,47 @@ function toBase64(file) {
   });
 }
 
+// Compress image before upload to keep size small
+async function compressImage(file, maxWidth = 1200, quality = 0.8) {
+  return new Promise((res) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      let w = img.width, h = img.height;
+      if (w > maxWidth) { h = Math.round(h * maxWidth / w); w = maxWidth; }
+      canvas.width = w; canvas.height = h;
+      canvas.getContext("2d").drawImage(img, 0, 0, w, h);
+      canvas.toBlob((blob) => {
+        URL.revokeObjectURL(url);
+        res(blob || file);
+      }, "image/jpeg", quality);
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); res(file); };
+    img.src = url;
+  });
+}
+
 // Upload a file to Supabase Storage and return the public URL
 async function uploadToStorage(file, folder = "general") {
-  const ext = file.name.split(".").pop();
-  const fileName = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-  const { error } = await supabase.storage
-    .from("beauty-images")
-    .upload(fileName, file, { upsert: true });
-  if (error) { console.error("Upload error:", error); return null; }
-  const { data } = supabase.storage.from("beauty-images").getPublicUrl(fileName);
-  return data.publicUrl;
+  try {
+    const compressed = await compressImage(file);
+    const fileName = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2)}.jpg`;
+    const { data, error } = await supabase.storage
+      .from("beauty-images")
+      .upload(fileName, compressed, { contentType: "image/jpeg", upsert: true });
+    if (error) {
+      console.error("Upload error:", error.message);
+      alert("Upload failed: " + error.message);
+      return null;
+    }
+    const { data: urlData } = supabase.storage.from("beauty-images").getPublicUrl(fileName);
+    return urlData.publicUrl;
+  } catch (err) {
+    console.error("Upload exception:", err);
+    alert("Upload error: " + err.message);
+    return null;
+  }
 }
 
 
@@ -650,6 +681,7 @@ function CalendarTab() {
 function ProgressTab() {
   const [photos, setPhotos] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [compare, setCompare] = useState(null);
   const [form, setForm] = useState({ date: today(), label: "", notes: "", previewFile: null, previewUrl: null });
@@ -671,16 +703,19 @@ function ProgressTab() {
   };
 
   const save = async () => {
-    if (!form.previewFile) return;
+    if (!form.previewFile || saving) return;
+    setSaving(true);
     const url = await uploadToStorage(form.previewFile, "progress");
-    if (!url) { alert("Image upload failed. Please try again."); return; }
-    await supabase.from("progress_photos").insert({
+    if (!url) { setSaving(false); return; }
+    const { error } = await supabase.from("progress_photos").insert({
       id: Date.now(), date: form.date, label: form.label,
       notes: form.notes, image_url: url
     });
+    if (error) { alert("Save failed: " + error.message); setSaving(false); return; }
     setForm({ date: today(), label: "", notes: "", previewFile: null, previewUrl: null });
     setShowForm(false);
     if (fileRef.current) fileRef.current.value = "";
+    setSaving(false);
     load();
   };
 
@@ -769,7 +804,9 @@ function ProgressTab() {
           </div>
           <div style={S.formActions}>
             <button style={S.cancelBtn} onClick={() => setShowForm(false)}>Cancel</button>
-            <button style={{ ...S.primaryBtn, opacity: form.previewFile ? 1 : 0.45 }} onClick={save}>Save Photo</button>
+            <button style={{ ...S.primaryBtn, opacity: form.previewFile && !saving ? 1 : 0.45 }} onClick={save}>
+              {saving ? "Uploading..." : "Save Photo"}
+            </button>
           </div>
         </Modal>
       )}
