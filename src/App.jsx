@@ -721,6 +721,11 @@ console.log("photos loaded:", data, "error:", error);
   };
 
   const remove = async (id) => {
+    const photo = photos.find(p => p.id === id);
+    if (photo?.image_url) {
+      const path = photo.image_url.split("/beauty-images/")[1];
+      if (path) await supabase.storage.from("beauty-images").remove([path]);
+    }
     await supabase.from("progress_photos").delete().eq("id", id);
     load();
   };
