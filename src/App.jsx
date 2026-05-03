@@ -689,7 +689,8 @@ function ProgressTab() {
 
   const load = useCallback(async () => {
     setLoading(true);
-    const { data } = await supabase.from("progress_photos").select("*").order("id", { ascending: false });
+    const { data, error } = await supabase.from("progress_photos").select("*").order("id", { ascending: false });
+console.log("photos loaded:", data, "error:", error);
     setPhotos(data || []);
     setLoading(false);
   }, []);
