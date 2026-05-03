@@ -936,8 +936,15 @@ function GuidesTab() {
               <button style={S.closeBtn} onClick={() => setViewGuide(null)}>×</button>
             </div>
             <div style={{ overflowY: "auto", flex: 1, paddingBottom: 20 }}>
-              {isImage(viewGuide) && viewGuide.file_url && <img src={viewGuide.file_url} alt="" style={{ width: "100%", borderRadius: 10 }} />}
-              {isPDF(viewGuide) && viewGuide.file_url && <iframe src={viewGuide.file_url} title={viewGuide.title} style={{ width: "100%", height: 500, border: "none", borderRadius: 10 }} />}
+              {isPDF(viewGuide) && viewGuide.file_url && (
+  <div style={{ textAlign: "center", padding: 20 }}>
+    <p style={{ color: "#8a8078", marginBottom: 16, fontSize: 14 }}>PDFs open in a new tab for the best viewing experience.</p>
+    <button style={{ padding: "10px 24px", background: "#c4845a", color: "#fff", border: "none", borderRadius: 20, fontSize: 14, cursor: "pointer" }}
+      onClick={() => window.open(viewGuide.file_url, "_blank")}>
+      Open PDF
+    </button>
+  </div>
+)}
               {viewGuide.description && <p style={{ fontSize: 14, color: "#5a5050", marginTop: 14, lineHeight: 1.6 }}>{viewGuide.description}</p>}
             </div>
           </div>
