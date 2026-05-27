@@ -981,6 +981,48 @@ function GuidesTab() {
 
 export default function App() {
   const [tab, setTab] = useState(0);
+
+  useEffect(() => {
+    // Request notification permission and check for due treatments
+    const initNotifications = async () => {
+      try {
+        if (window.OneSignal) {
+          await window.OneSignal.Notifications.requestPermission();
+        }
+        // Check for due/overdue schedules and notify
+        const { data: schedules } = await supabase
+          .from("schedules")
+          .select("*");
+        if (!schedules) return;
+        const due = schedules.filter(s => {
+          const days = Math.round(
+            (new Date(s.next_due + "T00:00:00") - new Date().setHours(0,0,0,0)) / 86400000
+          );
+          return days <= 1;
+        });
+        if (due.length > 0 && window.OneSignal) {
+          due.forEach(s => {
+            const days = Math.round(
+              (new Date(s.next_due + "T00:00:00") - new Date().setHours(0,0,0,0)) / 86400000
+            );
+            const msg = days < 0
+              ? `${s.type} is overdue by ${Math.abs(days)} day(s)!`
+              : days === 0
+              ? `${s.type} is due today!`
+              : `${s.type} is due tomorrow!`;
+            window.OneSignal.Notifications.push({
+              headings: { en: "DIY Beauty Tracker" },
+              contents: { en: msg },
+            });
+          });
+        }
+      } catch (e) {
+        console.log("Notification init:", e);
+      }
+    };
+    initNotifications();
+  }, []);
+
   return (
     <div style={S.app}>
       <div style={S.header}>
