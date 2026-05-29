@@ -794,11 +794,12 @@ function CalendarTab() {
           const ts = byDate[k] || [];
           const isToday = k === today();
           return (
-            <div key={k} style={{ ...S.calCell, ...(isToday ? S.calToday : {}), ...(ts.length > 0 ? S.calHasEvent : {}) }}>
-              <span style={{ ...S.calNum, ...(isToday ? S.calNumToday : {}) }}>{d}</span>
-              {ts.slice(0, 2).map((t, ti) => <div key={ti} style={S.calDot} title={t.type} />)}
-              {ts.length > 2 && <div style={S.calMore}>+{ts.length - 2}</div>}
-            </div>
+            <div key={k} style={{ ...S.calCell, ...(isToday ? S.calToday : {}), ...(ts.length > 0 ? S.calHasEvent : {}), cursor: ts.length > 0 ? "pointer" : "default" }}
+  onClick={() => ts.length > 0 && setSelectedDate({ date: k, treatments: ts })}>
+  <span style={{ ...S.calNum, ...(isToday ? S.calNumToday : {}) }}>{d}</span>
+  {ts.slice(0, 2).map((t, ti) => <div key={ti} style={S.calDot} title={t.type} />)}
+  {ts.length > 2 && <div style={S.calMore}>+{ts.length - 2}</div>}
+</div>
           );
         })}
       </div>
