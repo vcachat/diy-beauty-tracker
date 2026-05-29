@@ -463,7 +463,8 @@ function TreatmentsTab() {
                     )}
                     {t.notes && <div style={S.treatNotes}>{t.notes}</div>}
                   </div>
-                  <button style={S.xBtn} onClick={() => removeTreatment(t.id)}>×</button>
+                  <button style={{ ...S.ghostBtn, flex: "none", padding: "6px 10px", marginRight: 24 }} onClick={() => setViewTreatment(t)}>View</button>
+<button style={S.xBtn} onClick={() => removeTreatment(t.id)}>×</button>
                 </div>
               );
             })}
