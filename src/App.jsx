@@ -517,7 +517,39 @@ function TreatmentsTab() {
           </div>
         </>
       )}
-
+{viewTreatment && (
+  <Modal title={viewTreatment.type} onClose={() => setViewTreatment(null)}>
+    <div style={S.form}>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+        <div>
+          <div style={S.label}>Date</div>
+          <div style={{ fontSize: 14, color: "#2c2820", marginTop: 4 }}>{formatDate(viewTreatment.date)}</div>
+        </div>
+        <div>
+          <div style={S.label}>Duration</div>
+          <div style={{ fontSize: 14, color: "#2c2820", marginTop: 4 }}>{viewTreatment.duration ? `${viewTreatment.duration} min` : "—"}</div>
+        </div>
+      </div>
+      <div>
+        <div style={S.label}>Rating</div>
+        <div style={{ fontSize: 18, color: "#f5a623", marginTop: 4 }}>{"★".repeat(viewTreatment.rating || 0)}{"☆".repeat(5 - (viewTreatment.rating || 0))}</div>
+      </div>
+      {viewTreatment.notes && (
+        <div>
+          <div style={S.label}>Notes</div>
+          <div style={{ fontSize: 14, color: "#5a5050", marginTop: 4, lineHeight: 1.6 }}>{viewTreatment.notes}</div>
+        </div>
+      )}
+      {viewTreatment.next_session && (
+        <div>
+          <div style={S.label}>Next Session</div>
+          <div style={{ fontSize: 14, color: "#c4845a", marginTop: 4 }}>{formatDate(viewTreatment.next_session)}</div>
+        </div>
+      )}
+      <TreatmentImages treatmentId={viewTreatment.id} />
+    </div>
+  </Modal>
+)}
       {showForm && (
         <Modal title="Log Treatment" onClose={() => setShowForm(false)}>
           <div style={S.form}>
