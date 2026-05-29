@@ -1182,11 +1182,12 @@ export default function App() {
           </button>
         ))}
       </div>
-      {tab === 0 && <ProductsTab />}
-      {tab === 1 && <TreatmentsTab />}
-      {tab === 2 && <CalendarTab />}
-      {tab === 3 && <ProgressTab />}
-      {tab === 4 && <GuidesTab />}
+     <TreatmentBanner />
+{tab === 0 && <ProductsTab />}
+{tab === 1 && <TreatmentsTab />}
+{tab === 2 && <CalendarTab />}
+{tab === 3 && <ProgressTab />}
+{tab === 4 && <GuidesTab />}
     </div>
   );
 }
