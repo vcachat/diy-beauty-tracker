@@ -131,7 +131,81 @@ function Modal({ title, onClose, children }) {
     </div>
   );
 }
+function TreatmentBanner() {
+  const [schedules, setSchedules] = useState([]);
 
+  useEffect(() => {
+    supabase.from("schedules").select("*").then(({ data }) => {
+      if (!data) return;
+      const due = data.filter(s => {
+        const days = Math.round(
+          (new Date(s.next_due + "T00:00:00") - new Date().setHours(0,0,0,0)) / 86400000
+        );
+        return days <= 3;
+      });
+      setSchedules(due);
+    });
+  }, []);
+
+  if (schedules.length === 0) return null;
+
+  const overdue = schedules.filter(s => Math.round((new Date(s.next_due + "T00:00:00") - new Date().setHours(0,0,0,0)) / 86400000) < 0);
+  const today = schedules.filter(s => Math.round((new Date(s.next_due + "T00:00:00") - new Date().setHours(0,0,0,0)) / 86400000) === 0);
+  const soon = schedules.filter(s => {
+    const d = Math.round((new Date(s.next_due + "T00:00:00") - new Date().setHours(0,0,0,0)) / 86400000);
+    return d > 0 && d <= 3;
+  });
+
+  return (
+    <div style={{ padding: "10px 16px 0" }}>
+      {overdue.length > 0 && (
+        <div style={{ background: "#fde8e8", border: "1px solid #f0c0c0", borderRadius: 12, padding: "10px 14px", marginBottom: 8, display: "flex", alignItems: "flex-start", gap: 10 }}>
+          <span style={{ fontSize: 18 }}>🔴</span>
+          <div>
+            <div style={{ fontSize: 13, fontWeight: 600, color: "#c05050", marginBottom: 2 }}>
+              {overdue.length} treatment{overdue.length > 1 ? "s" : ""} overdue
+            </div>
+            <div style={{ fontSize: 12, color: "#a04040" }}>
+              {overdue.map(s => {
+                const days = Math.abs(Math.round((new Date(s.next_due + "T00:00:00") - new Date().setHours(0,0,0,0)) / 86400000));
+                return `${s.type} (${days}d ago)`;
+              }).join(", ")}
+            </div>
+          </div>
+        </div>
+      )}
+      {today.length > 0 && (
+        <div style={{ background: "#fff3e0", border: "1px solid #f0d0a0", borderRadius: 12, padding: "10px 14px", marginBottom: 8, display: "flex", alignItems: "flex-start", gap: 10 }}>
+          <span style={{ fontSize: 18 }}>🟡</span>
+          <div>
+            <div style={{ fontSize: 13, fontWeight: 600, color: "#c08020", marginBottom: 2 }}>
+              Due today
+            </div>
+            <div style={{ fontSize: 12, color: "#a06010" }}>
+              {today.map(s => s.type).join(", ")}
+            </div>
+          </div>
+        </div>
+      )}
+      {soon.length > 0 && (
+        <div style={{ background: "#e8f5e9", border: "1px solid #b0d8b0", borderRadius: 12, padding: "10px 14px", marginBottom: 8, display: "flex", alignItems: "flex-start", gap: 10 }}>
+          <span style={{ fontSize: 18 }}>🟢</span>
+          <div>
+            <div style={{ fontSize: 13, fontWeight: 600, color: "#4a8a5a", marginBottom: 2 }}>
+              Coming up soon
+            </div>
+            <div style={{ fontSize: 12, color: "#3a7a4a" }}>
+              {soon.map(s => {
+                const days = Math.round((new Date(s.next_due + "T00:00:00") - new Date().setHours(0,0,0,0)) / 86400000);
+                return `${s.type} (in ${days}d)`;
+              }).join(", ")}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
 function Field({ label, children }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
