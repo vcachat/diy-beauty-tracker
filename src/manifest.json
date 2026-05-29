@@ -1,0 +1,21 @@
+{
+  "name": "DIY Beauty Tracker",
+  "short_name": "Beauty Tracker",
+  "description": "Your personal skin ritual log",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f7f5f2",
+  "theme_color": "#c4845a",
+  "icons": [
+    {
+      "src": "https://fav.farm/🌸",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://fav.farm/🌸",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
