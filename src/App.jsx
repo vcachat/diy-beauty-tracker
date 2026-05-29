@@ -321,6 +321,7 @@ function TreatmentsTab() {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [showScheduleForm, setShowScheduleForm] = useState(false);
+  const [viewTreatment, setViewTreatment] = useState(null);
   const [view, setView] = useState("log");
   const [form, setForm] = useState({ type: "", date: today(), products: [], duration: "", rating: 5, notes: "", nextSession: "", images: [] });
   const [schedForm, setSchedForm] = useState({ type: "", frequency: "", lastDone: today(), notes: "" });
