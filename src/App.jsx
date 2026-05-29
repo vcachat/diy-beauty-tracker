@@ -803,6 +803,26 @@ function CalendarTab() {
           );
         })}
       </div>
+      {selectedDate && (
+  <Modal title={formatDate(selectedDate.date)} onClose={() => setSelectedDate(null)}>
+    <div style={S.form}>
+      {selectedDate.treatments.map((t, i) => (
+        <div key={i} style={{ background: "#fdf8f4", borderRadius: 12, padding: 14, border: "1px solid #ede8e0" }}>
+          <div style={{ fontSize: 15, fontWeight: 600, color: "#2c2820", marginBottom: 6 }}>{t.type}</div>
+          <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+            {t.duration && <span style={{ fontSize: 12, color: "#b0a898" }}>⏱ {t.duration} min</span>}
+            {t.rating && <span style={{ fontSize: 12, color: "#f5a623" }}>{"★".repeat(t.rating)}</span>}
+            {t.next_session && <span style={{ fontSize: 12, color: "#c4845a" }}>🔄 Next: {formatDate(t.next_session)}</span>}
+          </div>
+          {t.notes && <div style={{ fontSize: 13, color: "#5a5050", marginTop: 8, fontStyle: "italic", lineHeight: 1.5 }}>{t.notes}</div>}
+        </div>
+      ))}
+    </div>
+    <div style={S.formActions}>
+      <button style={S.cancelBtn} onClick={() => setSelectedDate(null)}>Close</button>
+    </div>
+  </Modal>
+)}
       {upcoming.length > 0 && (
         <div style={{ marginTop: 20 }}>
           <div style={S.sectionTitle}>Upcoming Sessions</div>
