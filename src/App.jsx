@@ -313,7 +313,28 @@ function ProductsTab() {
   );
 }
 
-
+function TreatmentImages({ treatmentId }) {
+  const [images, setImages] = useState([]);
+  useEffect(() => {
+    supabase.from("treatment_images")
+      .select("*")
+      .eq("treatment_id", treatmentId)
+      .then(({ data }) => setImages(data || []));
+  }, [treatmentId]);
+  if (images.length === 0) return null;
+  return (
+    <div>
+      <div style={{ fontSize: 12, color: "#b0a898", fontWeight: 500, textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 8 }}>Treatment Photos</div>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+        {images.map(img => (
+          <img key={img.id} src={img.image_url} alt={img.name || "treatment"}
+            style={{ width: 90, height: 90, borderRadius: 10, objectFit: "cover", border: "1px solid #ede8e0", cursor: "pointer" }}
+            onClick={() => window.open(img.image_url, "_blank")} />
+        ))}
+      </div>
+    </div>
+  );
+}
 function TreatmentsTab() {
   const [treatments, setTreatments] = useState([]);
   const [schedules, setSchedules] = useState([]);
