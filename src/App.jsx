@@ -495,6 +495,18 @@ function TreatmentsTab() {
                   {s.notes && <div style={S.schedNotes}>{s.notes}</div>}
                   <div style={S.schedActions}>
                     <button style={S.primaryBtn} onClick={() => markDone(s)}>✓ Done Today</button>
+<button style={{ ...S.ghostBtn, flex: "none", padding: "6px 12px" }}
+  onClick={() => {
+    const date = s.next_due;
+    const title = encodeURIComponent(`${s.type} - Beauty Treatment`);
+    const notes = encodeURIComponent(`Scheduled ${s.frequency} via DIY Beauty Tracker`);
+    window.open(`x-apple-reminderkit://REMCDReminder?title=${title}&notes=${notes}`, "_blank");
+    setTimeout(() => {
+      window.open(`calshow:${new Date(date + "T09:00:00").getTime() / 1000}`, "_blank");
+    }, 100);
+  }}>
+  🔔 Remind Me
+</button>
                     <button style={S.dangerBtn} onClick={() => removeSchedule(s.id)}>Remove</button>
                   </div>
                 </div>
