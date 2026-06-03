@@ -754,7 +754,7 @@ function CalendarTab() {
   const [selectedTreatment, setSelectedTreatment] = useState(null);
 
   useEffect(() => {
-    supabase.from("treatments").select("type,date").then(({ data }) => setTreatments(data || []));
+    supabase.from("treatments").select("*").then(({ data }) => setTreatments(data || []));
     supabase.from("schedules").select("type,next_due").then(({ data }) => setSchedules(data || []));
   }, []);
 
