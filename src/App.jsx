@@ -751,6 +751,7 @@ function CalendarTab() {
   const [schedules, setSchedules] = useState([]);
   const [now, setNow] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedTreatment, setSelectedTreatment] = useState(null);
 
   useEffect(() => {
     supabase.from("treatments").select("type,date").then(({ data }) => setTreatments(data || []));
