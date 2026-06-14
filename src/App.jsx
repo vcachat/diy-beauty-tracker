@@ -458,11 +458,12 @@ function TreatmentsTab() {
   const save = async () => {
     if (!form.type) return;
     const id = Date.now();
+    const uid = await getUserId();
     await supabase.from("treatments").insert({
       id, type: form.type, date: form.date,
       duration: form.duration, rating: form.rating,
       notes: form.notes, next_session: form.nextSession,
-      products: form.products,
+      products: form.products, user_id: uid
     });
     // Upload treatment images to Storage
     for (const img of (form.images || [])) {
