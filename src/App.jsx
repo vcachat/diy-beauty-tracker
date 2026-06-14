@@ -1181,7 +1181,54 @@ function GuidesTab() {
   );
 }
 
+function LoginScreen({ onLogin }) {
+  const [mode, setMode] = useState("login"); // "login" or "signup"
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
+  const handleSubmit = async () => {
+    setError("");
+    setLoading(true);
+    if (mode === "login") {
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) setError(error.message);
+      else onLogin(data.user);
+    } else {
+      const { data, error } = await supabase.auth.signUp({ email, password });
+      if (error) setError(error.message);
+      else if (data.user) onLogin(data.user);
+    }
+    setLoading(false);
+  };
+
+  return (
+    <div style={{ ...S.app, display: "flex", alignItems: "center", justifyContent: "center", minHeight: "100vh", padding: 20 }}>
+      <div style={{ background: "#fff", borderRadius: 20, padding: 32, width: "100%", maxWidth: 380, border: "1px solid #ede8e0", boxShadow: "0 4px 24px rgba(0,0,0,0.06)" }}>
+        <div style={{ textAlign: "center", marginBottom: 24 }}>
+          <div style={S.appName}>DIY Beauty Tracker</div>
+          <div style={S.appSub}>Your personal skin ritual log</div>
+        </div>
+        <div style={S.form}>
+          <Field label="Email">
+            <input style={S.input} type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="you@example.com" />
+          </Field>
+          <Field label="Password">
+            <input style={S.input} type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••••" />
+          </Field>
+          {error && <div style={{ color: "#c05050", fontSize: 13 }}>{error}</div>}
+          <button style={{ ...S.primaryBtn, width: "100%", padding: "12px", opacity: loading ? 0.6 : 1 }} onClick={handleSubmit} disabled={loading}>
+            {loading ? "Please wait..." : mode === "login" ? "Log In" : "Sign Up"}
+          </button>
+          <button style={{ ...S.cancelBtn, width: "100%" }} onClick={() => { setMode(mode === "login" ? "signup" : "login"); setError(""); }}>
+            {mode === "login" ? "Need an account? Sign Up" : "Already have an account? Log In"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
 export default function App() {
   const [tab, setTab] = useState(0);
 
