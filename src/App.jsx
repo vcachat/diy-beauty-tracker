@@ -1072,7 +1072,7 @@ function GuidesTab() {
       id: Date.now(), title: form.title, category: form.category,
       description: form.description, file_name: form.fileName,
       file_type: form.fileType, file_url: fileUrl,
-      added_date: form.addedDate
+      added_date: form.addedDate, user_id: uid
     });
     setForm({ title: "", category: "", description: "", previewFile: null, fileName: "", fileType: "", addedDate: today(), previewUrl: null });
     setShowForm(false);
