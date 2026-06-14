@@ -429,10 +429,11 @@ function TreatmentsTab() {
 
   const load = useCallback(async () => {
     setLoading(true);
+    const uid = await getUserId();
     const [{ data: t }, { data: s }, { data: p }] = await Promise.all([
-      supabase.from("treatments").select("*").order("id", { ascending: false }),
-      supabase.from("schedules").select("*").order("next_due"),
-      supabase.from("products").select("*").eq("finished", false)
+      supabase.from("treatments").select("*").eq("user_id", uid).order("id", { ascending: false }),
+      supabase.from("schedules").select("*").eq("user_id", uid).order("next_due"),
+      supabase.from("products").select("*").eq("user_id", uid).eq("finished", false)
     ]);
     setTreatments(t || []);
     setSchedules(s || []);
