@@ -1231,6 +1231,25 @@ function LoginScreen({ onLogin }) {
 }
 export default function App() {
   const [tab, setTab] = useState(0);
+  const [user, setUser] = useState(undefined); // undefined = loading, null = logged out, object = logged in
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      setUser(data.session?.user || null);
+    });
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user || null);
+    });
+    return () => listener.subscription.unsubscribe();
+  }, []);
+
+  if (user === undefined) {
+    return <div style={{ ...S.app, display: "flex", alignItems: "center", justifyContent: "center", minHeight: "100vh", color: "#b0a898" }}>Loading...</div>;
+  }
+
+  if (!user) {
+    return <LoginScreen onLogin={setUser} />;
+  }
 
   useEffect(() => {
     // Request notification permission and check for due treatments
