@@ -762,8 +762,12 @@ function CalendarTab() {
   const [selectedTreatment, setSelectedTreatment] = useState(null);
 
   useEffect(() => {
-    supabase.from("treatments").select("*").then(({ data }) => setTreatments(data || []));
-    supabase.from("schedules").select("type,next_due").then(({ data }) => setSchedules(data || []));
+    getUserId().then(uid => {
+      supabase.from("treatments").select("*").eq("user_id", uid).then(({ data }) => setTreatments(data || []));
+      supabase.from("schedules").select("type,next_due").eq("user_id", uid).then(({ data }) => setSchedules(data || []));
+    });
+      supabase.from("schedules").select("type,next_due").eq("user_id", uid).then(({ data }) => setSchedules(data || []));
+    });
   }, []);
 
   const year = now.getFullYear(), month = now.getMonth();
