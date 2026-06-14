@@ -64,7 +64,10 @@ const daysUntil = (iso) => {
   const target = new Date(iso + "T00:00:00");
   return Math.round((target - now) / 86400000);
 };
-
+async function getUserId() {
+  const { data } = await supabase.auth.getUser();
+  return data.user?.id;
+}
 function toBase64(file) {
   return new Promise((res, rej) => {
     const r = new FileReader();
