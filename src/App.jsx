@@ -238,7 +238,8 @@ function ProductsTab() {
 
   const load = useCallback(async () => {
     setLoading(true);
-    const { data } = await supabase.from("products").select("*").order("id", { ascending: false });
+    const uid = await getUserId();
+    const { data } = await supabase.from("products").select("*").eq("user_id", uid).order("id", { ascending: false });
     setProducts(data || []);
     setLoading(false);
   }, []);
