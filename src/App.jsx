@@ -486,9 +486,10 @@ function TreatmentsTab() {
     if (!schedForm.type || !schedForm.frequency) return;
     const opt = RECUR_OPTIONS.find(o => o.label === schedForm.frequency);
     const nextDue = addDays(schedForm.lastDone, opt.days);
+    const uid = await getUserId();
     await supabase.from("schedules").insert({
       id: Date.now(), type: schedForm.type, frequency: schedForm.frequency,
-      last_done: schedForm.lastDone, next_due: nextDue, notes: schedForm.notes
+      last_done: schedForm.lastDone, next_due: nextDue, notes: schedForm.notes, user_id: uid
     });
     setSchedForm({ type: "", frequency: "", lastDone: today(), notes: "" });
     setShowScheduleForm(false);
