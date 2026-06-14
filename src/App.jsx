@@ -271,7 +271,8 @@ function ProductsTab() {
     if (editingId) {
       await supabase.from("products").update(row).eq("id", editingId);
     } else {
-      await supabase.from("products").insert({ ...row, id: Date.now() });
+      const uid = await getUserId();
+      await supabase.from("products").insert({ ...row, id: Date.now(), user_id: uid });
     }
     setShowForm(false); setEditingId(null); load();
   };
