@@ -925,7 +925,7 @@ function ProgressTab() {
     if (!url) { setSaving(false); return; }
     const { error } = await supabase.from("progress_photos").insert({
       id: Date.now(), date: form.date, label: form.label,
-      notes: form.notes, image_url: url
+      notes: form.notes, image_url: url, user_id: uid
     });
     if (error) { alert("Save failed: " + error.message); setSaving(false); return; }
     setForm({ date: today(), label: "", notes: "", previewFile: null, previewUrl: null });
