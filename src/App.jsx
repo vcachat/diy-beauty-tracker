@@ -1047,7 +1047,8 @@ function GuidesTab() {
 
   const load = useCallback(async () => {
     setLoading(true);
-    const { data } = await supabase.from("guides").select("*").order("id", { ascending: false });
+    const uid = await getUserId();
+      const { data } = await supabase.from("guides").select("*").eq("user_id", uid).order("id", { ascending: false });
     setGuides(data || []);
     setLoading(false);
   }, []);
