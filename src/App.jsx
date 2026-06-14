@@ -138,7 +138,8 @@ function TreatmentBanner() {
   const [schedules, setSchedules] = useState([]);
 
   useEffect(() => {
-    supabase.from("schedules").select("*").then(({ data }) => {
+    getUserId().then(uid => {
+    supabase.from("schedules").select("*").eq("user_id", uid).then(({ data }) => {
       if (!data) return;
       const due = data.filter(s => {
         const days = Math.round(
