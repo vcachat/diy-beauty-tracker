@@ -149,6 +149,7 @@ function TreatmentBanner() {
       });
       setSchedules(due);
     });
+    });
   }, []);
 
   if (schedules.length === 0) return null;
