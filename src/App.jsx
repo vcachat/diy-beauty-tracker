@@ -470,9 +470,9 @@ function TreatmentsTab() {
       if (img.file) {
         const url = await uploadToStorage(img.file, "treatments");
         if (url) {
-          await supabase.from("treatment_images").insert({
+        await supabase.from("treatment_images").insert({
             id: Date.now() + Math.floor(Math.random() * 10000),
-            treatment_id: id, name: img.name, image_url: url
+            treatment_id: id, name: img.name, image_url: url, user_id: uid
           });
         }
       }
