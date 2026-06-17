@@ -1256,26 +1256,19 @@ export default function App() {
     });
     return () => listener.subscription.unsubscribe();
   }, []);
-
-  if (user === undefined) {
-    return <div style={{ ...S.app, display: "flex", alignItems: "center", justifyContent: "center", minHeight: "100vh", color: "#b0a898" }}>Loading...</div>;
-  }
-
-  if (!user) {
-    return <LoginScreen onLogin={setUser} />;
-  }
-
-  useEffect(() => {
+useEffect(() => {
     // Request notification permission and check for due treatments
     const initNotifications = async () => {
       try {
         if (window.OneSignal) {
           await window.OneSignal.Notifications.requestPermission();
         }
-        // Check for due/overdue schedules and notify
+        const uid = await getUserId();
+        if (!uid) return;
         const { data: schedules } = await supabase
           .from("schedules")
-          .select("*");
+          .select("*")
+          .eq("user_id", uid);
         if (!schedules) return;
         const due = schedules.filter(s => {
           const days = Math.round(
@@ -1304,7 +1297,16 @@ export default function App() {
       }
     };
     initNotifications();
-  }, []);
+  }, [user]);
+
+  if (user === undefined) {
+    return <div style={{ ...S.app, display: "flex", alignItems: "center", justifyContent: "center", minHeight: "100vh", color: "#b0a898" }}>Loading...</div>;
+  }
+
+  if (!user) {
+    return <LoginScreen onLogin={setUser} />;
+  }
+  
 
   return (
     <div style={S.app}>
