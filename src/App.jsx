@@ -1312,17 +1312,13 @@ useEffect(() => {
   return (
     <div style={S.app}>
       <div style={S.header}>
-      <div style={S.headerContent}>
+     <div style={S.headerContent}>
             <div>
               <div style={S.appName}>DIY Beauty Tracker</div>
               <div style={S.appSub}>Your personal skin ritual log</div>
             </div>
-            <button style={{ background: "none", border: "1px solid #e0d8d0", borderRadius: 20, padding: "6px 14px", fontSize: 13, color: "#8a8078", cursor: "pointer" }} onClick={() => supabase.auth.signOut()}>Log Out</button>
+            <button onClick={() => supabase.auth.signOut()} style={{background:"none",border:"1px solid #e0d8d0",borderRadius:20,padding:"6px 14px",fontSize:13,color:"#8a8078",cursor:"pointer"}}>Log Out</button>
           </div>
-      <div style={S.nav}>
-        {TABS.map((t, i) => (
-          <button key={t} style={{ ...S.navBtn, ...(tab === i ? S.navActive : {}) }} onClick={() => setTab(i)}>
-            <span style={{ fontSize: 16 }}>{TAB_ICONS[i]}</span>
             <span style={{ fontSize: 11, marginTop: 2 }}>{t}</span>
           </button>
         ))}
