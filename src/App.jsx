@@ -1317,9 +1317,7 @@ useEffect(() => {
               <div style={S.appName}>DIY Beauty Tracker</div>
               <div style={S.appSub}>Your personal skin ritual log</div>
             </div>
-            <button style={{ background: "none", border: "1px solid #e0d8d0", borderRadius: 20, padding: "6px 14px", fontSize: 13, color: "#8a8078", cursor: "pointer" }} onClick={() => supabase.auth.signOut()}>
-              Log Out
-            </button>
+            <button style={{ background: "none", border: "1px solid #e0d8d0", borderRadius: 20, padding: "6px 14px", fontSize: 13, color: "#8a8078", cursor: "pointer" }} onClick={() => supabase.auth.signOut()}>Log Out</button>
           </div>
       <div style={S.nav}>
         {TABS.map((t, i) => (
