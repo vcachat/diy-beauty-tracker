@@ -924,6 +924,7 @@ function ProgressTab() {
     setSaving(true);
     const url = await uploadToStorage(form.previewFile, "progress");
     if (!url) { setSaving(false); return; }
+    const uid = await getUserId();
     const { error } = await supabase.from("progress_photos").insert({
       id: Date.now(), date: form.date, label: form.label,
       notes: form.notes, image_url: url, user_id: uid
