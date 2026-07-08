@@ -1319,10 +1319,7 @@ useEffect(() => {
             </div>
             <button onClick={() => supabase.auth.signOut()} style={{background:"none",border:"1px solid #e0d8d0",borderRadius:20,padding:"6px 14px",fontSize:13,color:"#8a8078",cursor:"pointer"}}>Log Out</button>
           </div>
-            <span style={{ fontSize: 11, marginTop: 2 }}>{t}</span>
-          </button>
-        ))}
-      </div>
+        </div>
      <TreatmentBanner />
 {tab === 0 && <ProductsTab />}
 {tab === 1 && <TreatmentsTab />}
