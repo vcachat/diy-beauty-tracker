@@ -6,7 +6,7 @@ const TABS = ["Products", "Treatments", "Calendar", "Progress", "Guides"];
 const TAB_ICONS = ["🧴", "✨", "📅", "📸", "📂"];
 
 const TREATMENT_TYPES = [
-  "Face Mask", "Eye Mask", "Sheet Mask", "Exfoliation", "Microneedling",
+  "Face Mask", "Eye Mask", "Sheet Mask", "Exfoliation", "Microneedling", "Dermaplane",
   "Mesotherapy", "HIFU", "Botox", "Filler", "LED Therapy", "Gua Sha",
   "Facial Massage", "Chemical Peel", "Microdermabrasion", "Hydrafacial",
   "Serum Treatment", "Lip Treatment", "Neck Treatment", "Body Treatment", "Other"
